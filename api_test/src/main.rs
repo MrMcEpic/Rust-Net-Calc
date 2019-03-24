@@ -1,7 +1,8 @@
 #![allow(clippy::unused_io_amount)]
 use std::error::Error;
+use std::fs::File;
 use std::io::prelude::{Read, Write};
-use std::net::{SocketAddr, TcpListener, TcpStream};
+use std::net::{TcpListener, TcpStream};
 
 use lib::get_nums;
 
@@ -12,8 +13,10 @@ fn main() {
 }
 
 fn runner() -> Result<(), Box<dyn Error>> {
-	let addr = SocketAddr::from(([127, 0, 0, 1], 7878));
-	let listener = TcpListener::bind(addr)?;
+	let mut f = File::open("ip.txt")?;
+	let mut ip = String::new();
+	f.read_to_string(&mut ip)?;
+	let listener = TcpListener::bind(&ip)?;
 
 	for stream in listener.incoming() {
 		let stream = stream?;

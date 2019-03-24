@@ -1,13 +1,17 @@
 #![allow(clippy::unused_io_amount)]
+use std::fs::File;
 use std::io;
 use std::io::{Read, Write};
 use std::net::{Shutdown, TcpStream};
 use std::process;
 
 fn main() -> std::io::Result<()> {
+	let mut f = File::open("ip.txt")?;
+	let mut ip = String::new();
+	f.read_to_string(&mut ip)?;
 	let mut oh = String::from("");
 	loop {
-		let mut stream = TcpStream::connect("127.0.0.1:7878")?;
+		let mut stream = TcpStream::connect(&ip)?;
 
 		io::stdin().read_line(&mut oh)?;
 
